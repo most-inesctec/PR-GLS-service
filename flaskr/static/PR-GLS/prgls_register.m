@@ -11,6 +11,7 @@ if ~isfield(opt,'max_it') || isempty(opt.max_it), opt.max_it = 100; end;
 if ~isfield(opt,'tol') || isempty(opt.tol), opt.tol = 1e-5; end;
 % Final print of figures (only in 2D)
 if ~isfield(opt,'viz') || isempty(opt.viz), opt.viz = 1; end;
+% Find the correspondence through C ?
 if ~isfield(opt,'corresp') || isempty(opt.corresp), opt.corresp = 0; end;
 % Percentage of expected outliers
 if ~isfield(opt,'outliers') || isempty(opt.outliers), opt.outliers = 0.1; end;
@@ -51,7 +52,7 @@ if opt.normalize, [X,Y,normal]=cpd_normalize(X,Y); end;
 if opt.sparse
     [P, C, W, iter, T] = prgls_GRBF_sparse(X, Y, opt.beta, opt.lambda, opt.max_it, opt.tol, opt.viz, opt.outliers, opt.corresp, opt.sigma2, opt.t, opt.nsc); 
 else
-    [P, C, W, iter, T] = prgls_GRBF(X, Y, opt.beta, opt.lambda, opt.max_it, opt.tol, opt.viz, opt.outliers, opt.corresp, opt.sigma2, opt.t, opt.nsc); 
+    [P, C, W, iter, T, G] = prgls_GRBF(X, Y, opt.beta, opt.lambda, opt.max_it, opt.tol, opt.viz, opt.outliers, opt.corresp, opt.sigma2, opt.t, opt.nsc); 
 end
 
 % Setting parameters of returning Transformation
@@ -61,7 +62,7 @@ Transform.iter=iter;
 Transform.Y=T;
 Transform.normal=normal;
 Transform.P=P;
-% Transform.W = W(:);
+Transform.hope = G*W;
 
 Transform.beta=opt.beta;
 Transform.W=W;
@@ -69,7 +70,7 @@ Transform.Yorig=Yorig;
 Transform.s=1;
 Transform.t=zeros(D,1);
 if opt.normalize,
-     Transform.Y=T*normal.xscale+repmat(normal.xd,M,1);
+    Transform.Y=T*normal.xscale+repmat(normal.xd,M,1);
 end 
 
 

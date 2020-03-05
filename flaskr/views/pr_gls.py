@@ -16,15 +16,25 @@ def pr_gls_interface():
     input_data = request.get_json()
 
     # Calling PR-GLS static file
-    oc = oct2py.Oct2Py()
-    oc.eval('cd %s/PR-GLS/CPD' % current_app.static_folder)
-    oc.eval('mex cpd_P.c')
-    oc.eval('mex cpd_Pappmex.c')
-    oc.eval('mex cpd_Pcorrespondence.c;')
-    oc.eval('cd ..')
-    res = oc.feval('prlgdemo')
+    with oct2py.Oct2Py() as oc:
+        oc.eval('cd %s/PR-GLS/CPD' % current_app.static_folder)
+        oc.eval('mex cpd_P.c')
+        oc.eval('mex cpd_Pappmex.c')
+        oc.eval('mex cpd_Pcorrespondence.c;')
+        oc.eval('cd ..')
+        res = oc.feval('prlgdemo')
 
-    # Error: abort(xxx)
+    # Calling PR-GLS static file
+    # with oct2py.Oct2Py() as oc:
+    #     oc.eval('cd %s/PR-GLS' % current_app.static_folder)
+    #     oc.eval('load ./data/save_fish_def_5_1.mat')
+    #     oc.eval('X = x1')
+    #     oc.eval('Y = y2a')
+    #     x = oc.eval('compute_prgls(X, Y)')
+    #     print(x)
+
+    # except oc.utils.Oct2PyError:
+    #     abort(500)
 
     return current_app.response_class(
         response=json.dumps(input_data),

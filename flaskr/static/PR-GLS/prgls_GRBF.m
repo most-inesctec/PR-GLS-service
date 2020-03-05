@@ -1,4 +1,4 @@
-function  [P, C, W, iter, T] = prgls_GRBF(X, Y, beta, lambda, max_it, tol, viz, outliers, corresp,sigma2, t, nsc);
+function  [P, C, W, iter, T, G] = prgls_GRBF(X, Y, beta, lambda, max_it, tol, viz, outliers, corresp,sigma2, t, nsc);
 
 [N, D]=size(X); [M, D]=size(Y);
 
