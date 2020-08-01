@@ -1,3 +1,3 @@
 # PR-GLS-service
 
-A microservice to run the PR-GLS method
+A microservice, built with flask, to run the PR-GLS method.
